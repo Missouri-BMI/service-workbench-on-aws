@@ -283,6 +283,21 @@ Resources:
           # Disable SMB - no reboot
           Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol -NoRestart
 
+          # Further securing SMB
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v requiresecuritysignature /t REG_DWORD /d 1 /f
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v enablesecuritysignature /t REG_DWORD /d 1 /f
+
+          # Disable cached logon credentials
+          reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v cachedlogonscount /t REG_SZ /d 0 /f
+
+          # Disable null session
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\LSA" /v RestrictAnonymous /t REG_DWORD /d 1 /f
+
+          # Disable autoplay
+          reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f
+          reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoAutorun /t REG_DWORD /d 1 /f
+          reg add "HKEY_USERS.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f
+
           # Install Windows Updates - require rebooting
           # Get-WindowsUpdate -AcceptAll -Install -AutoReboot
 
