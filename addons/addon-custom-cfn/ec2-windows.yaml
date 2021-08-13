@@ -298,6 +298,10 @@ Resources:
           reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoAutorun /t REG_DWORD /d 1 /f
           reg add "HKEY_USERS.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f
 
+          # Disable LLMNR
+          reg add “HKLM\Software\policies\Microsoft\Windows NT\DNSClient”
+          reg add “HKLM\Software\policies\Microsoft\Windows NT\DNSClient” /v ” EnableMulticast” /t REG_DWORD /d “0” /f
+
           # Install Windows Updates - require rebooting
           # Get-WindowsUpdate -AcceptAll -Install -AutoReboot
 
@@ -375,10 +379,33 @@ Resources:
           $arguments = "-defaultS3Mounts=$defaultS3Mounts -destination=d:\ -region=${AWS::Region} -recurringDownloads=${RecurringDownloads} -downloadInterval=${DownloadInterval} -stopRecurringDownloadsAfter=${StopRecurringDownloadsAfter}"
           Start-Process -NoNewWindow -RedirectStandardOutput s3-synchronizer-stdout.txt -RedirectStandardError s3-synchronizer-stderr.txt -FilePath "c:\workdir\s3-synchronizer.exe" -ArgumentList $arguments  -WorkingDirectory "d:\"
           '@
-          Set-Content -Path c:\workdir\start-s3-synchronizer.ps1 -Value $startS3SyncScriptContent
+          Set-Content -Path C:\workdir\start-s3-synchronizer.ps1 -Value $startS3SyncScriptContent
 
           # Source the script to start the s3 synchronizer process
           ."C:\workdir\start-s3-synchronizer.ps1"
+
+          # R/Rstudio Desktop Installation
+          # $dir = $env:TEMP;
+          # Set-Location $dir
+
+          # [update] visit https://www.rstudio.com/products/rstudio/download/#download and update download link to the most recent version of Rstudio installer
+          # $urlRStudio = "https://download1.rstudio.org/desktop/windows/RStudio-1.4.1717.exe"
+          # $outputRStudio = "$dir\RStudio.exe"
+
+          # $wcRStudio = New-Object System.Net.WebClient
+          # $wcRStudio.DownloadFile($urlRStudio, $outputRStudio) # $PSScriptRoot 
+
+          # [update] visit https://cran.r-project.org/bin/windows/base/ and update download link to the most recent version of Rstudio installer
+          # $urlR = "https://cran.r-project.org/bin/windows/base/R-4.1.1-win.exe"
+          # $outputR = "$dir\R-win.exe"
+          # $wcR = New-Object System.Net.WebClient
+          # $wcR.DownloadFile($urlR, $outputR)
+
+          # $dirRStudio = $dir + "\RStudio.exe"
+          # $dirR = $dir + "\R-win.exe"
+
+          # Start-Process -FilePath $dirRStudio -ArgumentList "/S /v/qn"
+          # Start-Process -FilePath $dirR -ArgumentList "/S /v/qn"
 
           cfn-signal.exe -e $lastexitcode --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
           </powershell>
