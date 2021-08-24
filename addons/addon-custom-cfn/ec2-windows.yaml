@@ -383,6 +383,14 @@ Resources:
 
           # Source the script to start the s3 synchronizer process
           ."C:\workdir\start-s3-synchronizer.ps1"
+          
+          # Section to download and install r and rstudio as well as create shortcut for rstudio
+          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+          Invoke-WebRequest https://cran.r-project.org/bin/windows/base/R-4.1.1-win.exe -OutFile c:\Users\Administrator\R-4.1.1-win.exe
+          Invoke-WebRequest https://download1.rstudio.org/desktop/windows/RStudio-1.4.1717.exe -OutFile c:\Users\Administrator\RStudio-1.4.1717.exe
+          c:\Users\Administrator\R-4.1.1-win.exe /verysilent
+          c:\Users\Administrator\RStudio-1.4.1717.exe /S
+          New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
 
           # R/Rstudio Desktop Installation
           # $dir = $env:TEMP;
