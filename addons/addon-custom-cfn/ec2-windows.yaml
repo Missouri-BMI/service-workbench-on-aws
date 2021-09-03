@@ -389,9 +389,11 @@ Resources:
           Invoke-WebRequest https://cran.r-project.org/bin/windows/base/R-4.1.1-win.exe -OutFile c:\Users\Administrator\R-4.1.1-win.exe
           Invoke-WebRequest https://download1.rstudio.org/desktop/windows/RStudio-1.4.1717.exe -OutFile c:\Users\Administrator\RStudio-1.4.1717.exe
           Invoke-WebRequest https://cran.r-project.org/bin/windows/Rtools/rtools40v2-x86_64.exe -OutFile c:\Users\Administrator\rtools40v2-x86_64.exe
+          Invoke-WebRequest https://sfc-repo.snowflakecomputing.com/odbc/win64/latest/snowflake64_odbc-2.24.0.msi -OutFile c:\Users\Administrator\snowflake64_odbc-2.24.0.msi
           c:\Users\Administrator\R-4.1.1-win.exe /verysilent
           c:\Users\Administrator\RStudio-1.4.1717.exe /S
           c:\Users\Administrator\rtools40v2-x86_64.exe /verysilent
+          c:\Users\Administrator\snowflake64_odbc-2.24.0.msi /quiet
           New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
 
           # R/Rstudio Desktop Installation
