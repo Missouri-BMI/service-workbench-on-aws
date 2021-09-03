@@ -389,9 +389,38 @@ Resources:
           Invoke-WebRequest https://cran.r-project.org/bin/windows/base/R-4.1.1-win.exe -OutFile c:\Users\Administrator\R-4.1.1-win.exe
           Invoke-WebRequest https://download1.rstudio.org/desktop/windows/RStudio-1.4.1717.exe -OutFile c:\Users\Administrator\RStudio-1.4.1717.exe
           Invoke-WebRequest https://cran.r-project.org/bin/windows/Rtools/rtools40v2-x86_64.exe -OutFile c:\Users\Administrator\rtools40v2-x86_64.exe
+          Invoke-WebRequest https://sfc-repo.snowflakecomputing.com/odbc/win64/latest/snowflake64_odbc-2.24.0.msi -OutFile c:\Users\Administrator\snowflake64_odbc-2.24.0.msi
           c:\Users\Administrator\R-4.1.1-win.exe /verysilent
           c:\Users\Administrator\RStudio-1.4.1717.exe /S
           c:\Users\Administrator\rtools40v2-x86_64.exe /verysilent
+<<<<<<< HEAD
+=======
+          c:\Users\Administrator\snowflake64_odbc-2.24.0.msi /quiet
+          New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
+
+          # R/Rstudio Desktop Installation
+          # $dir = $env:TEMP;
+          # Set-Location $dir
+
+          # [update] visit https://www.rstudio.com/products/rstudio/download/#download and update download link to the most recent version of Rstudio installer
+          # $urlRStudio = "https://download1.rstudio.org/desktop/windows/RStudio-1.4.1717.exe"
+          # $outputRStudio = "$dir\RStudio.exe"
+
+          # $wcRStudio = New-Object System.Net.WebClient
+          # $wcRStudio.DownloadFile($urlRStudio, $outputRStudio) # $PSScriptRoot 
+
+          # [update] visit https://cran.r-project.org/bin/windows/base/ and update download link to the most recent version of Rstudio installer
+          # $urlR = "https://cran.r-project.org/bin/windows/base/R-4.1.1-win.exe"
+          # $outputR = "$dir\R-win.exe"
+          # $wcR = New-Object System.Net.WebClient
+          # $wcR.DownloadFile($urlR, $outputR)
+
+          # $dirRStudio = $dir + "\RStudio.exe"
+          # $dirR = $dir + "\R-win.exe"
+
+          # Start-Process -FilePath $dirRStudio -ArgumentList "/S /v/qn"
+          # Start-Process -FilePath $dirR -ArgumentList "/S /v/qn"
+>>>>>>> c43b82f91d2bc5fb1b1b31f1d9f105d1cca96b6c
 
           cfn-signal.exe -e $lastexitcode --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
           </powershell>
