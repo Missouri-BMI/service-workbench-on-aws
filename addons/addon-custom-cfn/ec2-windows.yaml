@@ -286,6 +286,8 @@ Resources:
           # Further securing SMB
           reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v requiresecuritysignature /t REG_DWORD /d 1 /f
           reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v enablesecuritysignature /t REG_DWORD /d 1 /f
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v requiresecuritysignature /t REG_DWORD /d 1 /f
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v enablesecuritysignature /t REG_DWORD /d 1 /f
 
           # Disable cached logon credentials
           reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v cachedlogonscount /t REG_SZ /d 0 /f
@@ -384,33 +386,48 @@ Resources:
           # Source the script to start the s3 synchronizer process
           ."C:\workdir\start-s3-synchronizer.ps1"
 
-          #create script to download qualys agent
-          $downloadQualysAgent = @'
+          #create script to download installers
+          $downloadInstallers = @'
           $uri = [System.Uri]"${EnvironmentInstanceFiles}"
           $key = "$($uri.AbsolutePath.Substring(1))/bin/QualysCloudAgent.exe"
           Read-S3Object -BucketName $uri.Host -Key $key -File QualysCloudAgent.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/R.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File R.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/RStudio.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File RStudio.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/rtools.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File rtools.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/snowflake-jdbc.jar"
+          Read-S3Object -BucketName $uri.Host -Key $key -File snowflake-jdbc.jar
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/snowflake64_odbc.msi"
+          Read-S3Object -BucketName $uri.Host -Key $key -File snowflake64_odbc.msi
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/jre.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File jre.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/GitHubDesktopSetup-x64.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File GitHubDesktopSetup-x64.exe
           '@
-          Set-Content -Path C:\workdir\QualysCloudAgentDownload.ps1 -Value $downloadQualysAgent
+          Set-Content -Path C:\workdir\InstallerDownload.ps1 -Value $downloadInstallers
 
-          ."C:\workdir\QualysCloudAgentDownload.ps1"
+          ."C:\workdir\InstallerDownload.ps1"
+          Start-Sleep -s 5
 
-          cmd /c "c:\workdir\QualysCloudAgent.exe CustomerId={b288187c-6e29-d330-8389-5b291af9e73f} ActivationId={75beca74-1e31-49b0-a353-cb176a99d0ef} WebServiceUri=https://qagpublic.qg1.apps.qualys.com/CloudAgent/"
-          Start-Sleep -Seconds 5
+
           # Download and install r, rstudio, rtools, and ODBC connector as well as create shortcuts
-          [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-          Invoke-WebRequest https://cran.r-project.org/bin/windows/base/R-4.1.1-win.exe -OutFile c:\Users\Administrator\R-4.1.1-win.exe
-          Invoke-WebRequest https://download1.rstudio.org/desktop/windows/RStudio-1.4.1717.exe -OutFile c:\Users\Administrator\RStudio-1.4.1717.exe
-          Invoke-WebRequest https://cran.r-project.org/bin/windows/Rtools/rtools40v2-x86_64.exe -OutFile c:\Users\Administrator\rtools40v2-x86_64.exe
-          Invoke-WebRequest https://sfc-repo.snowflakecomputing.com/odbc/win64/latest/snowflake64_odbc-2.24.0.msi -OutFile c:\Users\Administrator\snowflake64_odbc-2.24.0.msi
-          c:\Users\Administrator\R-4.1.1-win.exe /verysilent
-          Start-Sleep -Seconds 5
-          c:\Users\Administrator\RStudio-1.4.1717.exe /S
-          Start-Sleep -Seconds 5
-          c:\Users\Administrator\rtools40v2-x86_64.exe /verysilent
-          Start-Sleep -Seconds 5
-          c:\Users\Administrator\snowflake64_odbc-2.24.0.msi /quiet
-          Start-Sleep -Seconds 5
+          c:\workdir\R.exe /verysilent
+          Start-Sleep -s 15
+          c:\workdir\RStudio.exe /S
+          Start-Sleep -s 15
+          c:\workdir\rtools.exe /verysilent
+          Start-Sleep -s 15
+          c:\workdir\snowflake64_odbc.msi /quiet
+          Start-Sleep -s 15
+          cmd /c "c:\workdir\QualysCloudAgent.exe CustomerId={b288187c-6e29-d330-8389-5b291af9e73f} ActivationId={75beca74-1e31-49b0-a353-cb176a99d0ef} WebServiceUri=https://qagpublic.qg1.apps.qualys.com/CloudAgent/"
+          Start-Sleep -s 15
+          c:\workdir\jre.exe /s
+          Start-Sleep -s 15
+          c:\workdir\GitHubDesktopSetup-x64.exe /s
           New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
+          Rename-LocalUser -name Guest -newname NotGuest
 
           cfn-signal.exe -e $lastexitcode --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
           </powershell>
