@@ -272,6 +272,9 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           <powershell>        
+
+          # ***START CUSTOMIZATIONS***
+
           # Fix spectre/meltdown issue
           reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v FeatureSettingsOverride /t REG_DWORD /d 72 /f
           reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v FeatureSettingsOverrideMask /t REG_DWORD /d 3 /f
@@ -303,6 +306,8 @@ Resources:
           # Disable LLMNR
           reg add “HKLM\Software\policies\Microsoft\Windows NT\DNSClient”
           reg add “HKLM\Software\policies\Microsoft\Windows NT\DNSClient” /v ” EnableMulticast” /t REG_DWORD /d “0” /f
+
+          # ***END CUSTOMIZATIONS***
 
           # Install Windows Updates - require rebooting
           # Get-WindowsUpdate -AcceptAll -Install -AutoReboot
@@ -386,7 +391,10 @@ Resources:
           # Source the script to start the s3 synchronizer process
           ."C:\workdir\start-s3-synchronizer.ps1"
 
-          #create script to download installers
+
+          # ***START CUSTOMIZATIONS***
+          
+          #create script to download installers from s3 bucket prod-oh-sw-environments-bootstrap-scripts/environment-files/bin/
           $downloadInstallers = @'
           $uri = [System.Uri]"${EnvironmentInstanceFiles}"
           $key = "$($uri.AbsolutePath.Substring(1))/bin/QualysCloudAgent.exe"
@@ -408,11 +416,12 @@ Resources:
           '@
           Set-Content -Path C:\workdir\InstallerDownload.ps1 -Value $downloadInstallers
 
+          #run the script just created, downloads all installers from s3 bucket prod-oh-sw-environments-bootstrap-scripts/environment-files/bin/
           ."C:\workdir\InstallerDownload.ps1"
           Start-Sleep -s 5
 
 
-          # Download and install r, rstudio, rtools, and ODBC connector as well as create shortcuts
+          # run all installers
           c:\workdir\R.exe /verysilent
           Start-Sleep -s 15
           c:\workdir\RStudio.exe /S
@@ -426,8 +435,14 @@ Resources:
           c:\workdir\jre.exe /s
           Start-Sleep -s 15
           c:\workdir\GitHubDesktopSetup-x64.exe /s
+
+          #create shortcut to rstudio on desktop
           New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
+
+          #rename guest account per qualys report
           Rename-LocalUser -name Guest -newname NotGuest
+
+          # ***END CUSTOMIZATIONS***
 
           cfn-signal.exe -e $lastexitcode --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
           </powershell>
