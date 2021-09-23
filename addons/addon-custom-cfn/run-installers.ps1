@@ -6,7 +6,7 @@ c:\workdir\rtools.exe /verysilent
 c:\workdir\snowflake64_odbc.msi /quiet
 cmd /c "c:\workdir\QualysCloudAgent.exe CustomerId={b288187c-6e29-d330-8389-5b291af9e73f} ActivationId={75beca74-1e31-49b0-a353-cb176a99d0ef} WebServiceUri=https://qagpublic.qg1.apps.qualys.com/CloudAgent/"
 c:\workdir\jre.exe /s
-cmd /c "c:\workdir\FirefoxInstaller.exe /S"
+c:\workdir\FirefoxSetup.msi /quiet
 cmd /c "c:\workdir\ChromeSetup.exe /silent /install"
 
 #create shortcut to rstudio on desktop
