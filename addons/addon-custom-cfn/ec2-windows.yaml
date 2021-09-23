@@ -413,36 +413,46 @@ Resources:
           Read-S3Object -BucketName $uri.Host -Key $key -File jre.exe
           $key = "$($uri.AbsolutePath.Substring(1))/bin/GitHubDesktopSetup-x64.exe"
           Read-S3Object -BucketName $uri.Host -Key $key -File GitHubDesktopSetup-x64.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/run-installers.ps1"
+          Read-S3Object -BucketName $uri.Host -Key $key -File run-installers.ps1
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/ChromeSetup.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File ChromeSetup.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/FirefoxInstaller.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File FirefoxInstaller.exe
+
           '@
           Set-Content -Path C:\workdir\InstallerDownload.ps1 -Value $downloadInstallers
 
           #run the script just created, downloads all installers from s3 bucket prod-oh-sw-environments-bootstrap-scripts/environment-files/bin/
           ."C:\workdir\InstallerDownload.ps1"
-          Start-Sleep -s 5
+          #Start-Sleep -s 5
 
 
           # run all installers
-          c:\workdir\GitHubDesktopSetup-x64.exe /s
-          Start-Sleep -s 15
-          c:\workdir\R.exe /verysilent
-          Start-Sleep -s 15
-          c:\workdir\RStudio.exe /S
-          Start-Sleep -s 15
-          c:\workdir\rtools.exe /verysilent
-          Start-Sleep -s 15
-          c:\workdir\snowflake64_odbc.msi /quiet
-          Start-Sleep -s 15
-          cmd /c "c:\workdir\QualysCloudAgent.exe CustomerId={b288187c-6e29-d330-8389-5b291af9e73f} ActivationId={75beca74-1e31-49b0-a353-cb176a99d0ef} WebServiceUri=https://qagpublic.qg1.apps.qualys.com/CloudAgent/"
-          Start-Sleep -s 15
-          c:\workdir\jre.exe /s
+          
+          ."C:\workdir\run-installers.ps1"
+
+          #c:\workdir\GitHubDesktopSetup-x64.exe /s
+          #Start-Sleep -s 15
+          #c:\workdir\R.exe /verysilent
+          #Start-Sleep -s 15
+          #c:\workdir\RStudio.exe /S
+          #Start-Sleep -s 15
+          #c:\workdir\rtools.exe /verysilent
+          #Start-Sleep -s 15
+          #c:\workdir\snowflake64_odbc.msi /quiet
+          #Start-Sleep -s 15
+          #cmd /c "c:\workdir\QualysCloudAgent.exe CustomerId={b288187c-6e29-d330-8389-5b291af9e73f} ActivationId={75beca74-1e31-49b0-a353-cb176a99d0ef} WebServiceUri=https://qagpublic.qg1.apps.qualys.com/CloudAgent/"
+          #Start-Sleep -s 15
+          #c:\workdir\jre.exe /s
           
           
 
           #create shortcut to rstudio on desktop
-          New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
+          #New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
 
           #rename guest account per qualys report
-          Rename-LocalUser -name Guest -newname NotGuest
+          #Rename-LocalUser -name Guest -newname NotGuest
 
           # ***END CUSTOMIZATIONS***
 
