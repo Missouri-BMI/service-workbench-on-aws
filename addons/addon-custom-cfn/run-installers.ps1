@@ -21,7 +21,6 @@ $key = "$($uri.AbsolutePath.Substring(1))/bin/ChromeSetup.exe"
 Read-S3Object -BucketName $uri.Host -Key $key -File ChromeSetup.exe
 $key = "$($uri.AbsolutePath.Substring(1))/bin/FirefoxSetup.exe"
 Read-S3Object -BucketName $uri.Host -Key $key -File FirefoxSetup.exe
-
 '@
 Set-Content -Path C:\workdir\InstallerDownload2.ps1 -Value $downloadInstallers2
 
