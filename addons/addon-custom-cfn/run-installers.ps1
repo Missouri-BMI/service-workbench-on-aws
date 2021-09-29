@@ -17,18 +17,16 @@ $key = "$($uri.AbsolutePath.Substring(1))/bin/jre.exe"
 Read-S3Object -BucketName $uri.Host -Key $key -File jre.exe
 $key = "$($uri.AbsolutePath.Substring(1))/bin/GitHubDesktopSetup-x64.exe"
 Read-S3Object -BucketName $uri.Host -Key $key -File GitHubDesktopSetup-x64.exe
-$key = "$($uri.AbsolutePath.Substring(1))/bin/run-installers.ps1"
-Read-S3Object -BucketName $uri.Host -Key $key -File run-installers.ps1
 $key = "$($uri.AbsolutePath.Substring(1))/bin/ChromeSetup.exe"
 Read-S3Object -BucketName $uri.Host -Key $key -File ChromeSetup.exe
 $key = "$($uri.AbsolutePath.Substring(1))/bin/FirefoxSetup.exe"
 Read-S3Object -BucketName $uri.Host -Key $key -File FirefoxSetup.exe
 
 '@
-Set-Content -Path C:\workdir\InstallerDownload.ps1 -Value $downloadInstallers
+Set-Content -Path C:\workdir\InstallerDownload2.ps1 -Value $downloadInstallers
 
 #run the script just created, downloads all installers from s3 bucket
-."C:\workdir\InstallerDownload.ps1"
+."C:\workdir\InstallerDownload2.ps1"
 
 
 #run all installers
