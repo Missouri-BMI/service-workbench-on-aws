@@ -1,5 +1,5 @@
 #create script to download installers
-$downloadInstallers = @'
+$downloadInstallers2 = @'
 $uri = [System.Uri]"${EnvironmentInstanceFiles}"
 $key = "$($uri.AbsolutePath.Substring(1))/bin/QualysCloudAgent.exe"
 Read-S3Object -BucketName $uri.Host -Key $key -File QualysCloudAgent.exe
@@ -23,7 +23,7 @@ $key = "$($uri.AbsolutePath.Substring(1))/bin/FirefoxSetup.exe"
 Read-S3Object -BucketName $uri.Host -Key $key -File FirefoxSetup.exe
 
 '@
-Set-Content -Path C:\workdir\InstallerDownload2.ps1 -Value $downloadInstallers
+Set-Content -Path C:\workdir\InstallerDownload2.ps1 -Value $downloadInstallers2
 
 #run the script just created, downloads all installers from s3 bucket
 ."C:\workdir\InstallerDownload2.ps1"
