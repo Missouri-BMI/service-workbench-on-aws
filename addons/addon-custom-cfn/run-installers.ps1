@@ -1,33 +1,3 @@
-#create script to download installers
-$downloadInstallers2 = @'
-$uri = [System.Uri]"${EnvironmentInstanceFiles}"
-$key = "$($uri.AbsolutePath.Substring(1))/bin/QualysCloudAgent.exe"
-Read-S3Object -BucketName $uri.Host -Key $key -File QualysCloudAgent.exe
-$key = "$($uri.AbsolutePath.Substring(1))/bin/R.exe"
-Read-S3Object -BucketName $uri.Host -Key $key -File R.exe
-$key = "$($uri.AbsolutePath.Substring(1))/bin/RStudio.exe"
-Read-S3Object -BucketName $uri.Host -Key $key -File RStudio.exe
-$key = "$($uri.AbsolutePath.Substring(1))/bin/rtools.exe"
-Read-S3Object -BucketName $uri.Host -Key $key -File rtools.exe
-$key = "$($uri.AbsolutePath.Substring(1))/bin/snowflake-jdbc.jar"
-Read-S3Object -BucketName $uri.Host -Key $key -File snowflake-jdbc.jar
-$key = "$($uri.AbsolutePath.Substring(1))/bin/snowflake64_odbc.msi"
-Read-S3Object -BucketName $uri.Host -Key $key -File snowflake64_odbc.msi
-$key = "$($uri.AbsolutePath.Substring(1))/bin/jre.exe"
-Read-S3Object -BucketName $uri.Host -Key $key -File jre.exe
-$key = "$($uri.AbsolutePath.Substring(1))/bin/GitHubDesktopSetup-x64.exe"
-Read-S3Object -BucketName $uri.Host -Key $key -File GitHubDesktopSetup-x64.exe
-$key = "$($uri.AbsolutePath.Substring(1))/bin/ChromeSetup.exe"
-Read-S3Object -BucketName $uri.Host -Key $key -File ChromeSetup.exe
-$key = "$($uri.AbsolutePath.Substring(1))/bin/FirefoxSetup.exe"
-Read-S3Object -BucketName $uri.Host -Key $key -File FirefoxSetup.exe
-'@
-Set-Content -Path C:\workdir\InstallerDownload2.ps1 -Value $downloadInstallers2
-
-#run the script just created, downloads all installers from s3 bucket
-."C:\workdir\InstallerDownload2.ps1"
-
-
 #run all installers
 cmd /c  "c:\workdir\GitHubDesktopSetup-x64.exe /s"
 c:\workdir\R.exe /verysilent
