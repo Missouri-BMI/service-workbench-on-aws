@@ -272,6 +272,9 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           <powershell>        
+
+          # ***START CUSTOMIZATIONS***
+
           # Fix spectre/meltdown issue
           reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v FeatureSettingsOverride /t REG_DWORD /d 72 /f
           reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v FeatureSettingsOverrideMask /t REG_DWORD /d 3 /f
@@ -286,6 +289,8 @@ Resources:
           # Further securing SMB
           reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v requiresecuritysignature /t REG_DWORD /d 1 /f
           reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v enablesecuritysignature /t REG_DWORD /d 1 /f
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v requiresecuritysignature /t REG_DWORD /d 1 /f
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v enablesecuritysignature /t REG_DWORD /d 1 /f
 
           # Disable cached logon credentials
           reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v cachedlogonscount /t REG_SZ /d 0 /f
@@ -297,6 +302,12 @@ Resources:
           reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f
           reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoAutorun /t REG_DWORD /d 1 /f
           reg add "HKEY_USERS.DEFAULT\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v NoDriveTypeAutoRun /t REG_DWORD /d 255 /f
+
+          # Disable LLMNR
+          reg add “HKLM\Software\policies\Microsoft\Windows NT\DNSClient”
+          reg add “HKLM\Software\policies\Microsoft\Windows NT\DNSClient” /v ” EnableMulticast” /t REG_DWORD /d “0” /f
+
+          # ***END CUSTOMIZATIONS***
 
           # Install Windows Updates - require rebooting
           # Get-WindowsUpdate -AcceptAll -Install -AutoReboot
@@ -375,10 +386,50 @@ Resources:
           $arguments = "-defaultS3Mounts=$defaultS3Mounts -destination=d:\ -region=${AWS::Region} -recurringDownloads=${RecurringDownloads} -downloadInterval=${DownloadInterval} -stopRecurringDownloadsAfter=${StopRecurringDownloadsAfter}"
           Start-Process -NoNewWindow -RedirectStandardOutput s3-synchronizer-stdout.txt -RedirectStandardError s3-synchronizer-stderr.txt -FilePath "c:\workdir\s3-synchronizer.exe" -ArgumentList $arguments  -WorkingDirectory "d:\"
           '@
-          Set-Content -Path c:\workdir\start-s3-synchronizer.ps1 -Value $startS3SyncScriptContent
+
+          Set-Content -Path C:\workdir\start-s3-synchronizer.ps1 -Value $startS3SyncScriptContent
 
           # Source the script to start the s3 synchronizer process
           ."C:\workdir\start-s3-synchronizer.ps1"
+
+          # ***START CUSTOMIZATIONS***
+
+          #create script to download installers from s3 bucket prod-oh-sw-environments-bootstrap-scripts/environment-files/bin/
+          $downloadInstallers = @'
+          $uri = [System.Uri]"${EnvironmentInstanceFiles}"
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/QualysCloudAgent.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File QualysCloudAgent.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/R.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File R.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/RStudio.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File RStudio.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/rtools.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File rtools.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/snowflake-jdbc.jar"
+          Read-S3Object -BucketName $uri.Host -Key $key -File snowflake-jdbc.jar
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/snowflake64_odbc.msi"
+          Read-S3Object -BucketName $uri.Host -Key $key -File snowflake64_odbc.msi
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/jre.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File jre.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/GitHubDesktopSetup-x64.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File GitHubDesktopSetup-x64.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/ChromeSetup.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File ChromeSetup.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/FirefoxSetup.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File FirefoxSetup.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/run-installers.ps1"
+          Read-S3Object -BucketName $uri.Host -Key $key -File run-installers.ps1
+          '@
+          Set-Content -Path C:\workdir\InstallerDownload.ps1 -Value $downloadInstallers
+
+          #run the script just created, downloads all installers from s3 bucket prod-oh-sw-environments-bootstrap-scripts/environment-files/bin/
+          ."C:\workdir\InstallerDownload.ps1"
+          
+          # run all installers
+          
+          ."C:\workdir\run-installers.ps1"
+
+          # ***END CUSTOMIZATIONS***
 
           cfn-signal.exe -e $lastexitcode --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
           </powershell>
