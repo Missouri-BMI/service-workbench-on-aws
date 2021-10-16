@@ -386,11 +386,11 @@ Resources:
           $arguments = "-defaultS3Mounts=$defaultS3Mounts -destination=d:\ -region=${AWS::Region} -recurringDownloads=${RecurringDownloads} -downloadInterval=${DownloadInterval} -stopRecurringDownloadsAfter=${StopRecurringDownloadsAfter}"
           Start-Process -NoNewWindow -RedirectStandardOutput s3-synchronizer-stdout.txt -RedirectStandardError s3-synchronizer-stderr.txt -FilePath "c:\workdir\s3-synchronizer.exe" -ArgumentList $arguments  -WorkingDirectory "d:\"
           '@
+
           Set-Content -Path C:\workdir\start-s3-synchronizer.ps1 -Value $startS3SyncScriptContent
 
           # Source the script to start the s3 synchronizer process
           ."C:\workdir\start-s3-synchronizer.ps1"
-
 
           # ***START CUSTOMIZATIONS***
 
