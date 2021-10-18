@@ -197,7 +197,7 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 30
+            VolumeSize: 40
             VolumeType: gp2
             Encrypted: true
             KmsKeyId: !Ref EncryptionKeyArn
