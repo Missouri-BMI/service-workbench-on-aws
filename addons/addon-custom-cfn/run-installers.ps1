@@ -14,3 +14,7 @@ New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RSt
 
 #rename guest account per qualys report
 Rename-LocalUser -name Guest -newname NotGuest
+
+#remove ec2 guide/feedback shortcuts
+rm 'C:\Users\Administrator\Desktop\EC2 Feedback.website'
+rm 'C:\Users\Administrator\Desktop\EC2 Microsoft Windows Guide.website'
