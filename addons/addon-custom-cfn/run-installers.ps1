@@ -8,6 +8,7 @@ cmd /c "c:\workdir\QualysCloudAgent.exe CustomerId={b288187c-6e29-d330-8389-5b29
 c:\workdir\jre.exe /s
 c:\workdir\FirefoxSetup.exe /S
 cmd /c "c:\workdir\ChromeSetup.exe /silent /install"
+c:\workdir\PortableGit.7z.exe -o c:\user\administrator\git -y
 
 #create shortcut to rstudio on desktop
 New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"

@@ -417,6 +417,8 @@ Resources:
           Read-S3Object -BucketName $uri.Host -Key $key -File ChromeSetup.exe
           $key = "$($uri.AbsolutePath.Substring(1))/bin/FirefoxSetup.exe"
           Read-S3Object -BucketName $uri.Host -Key $key -File FirefoxSetup.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/PortableGit.7z.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File PortableGit.7z.exe
           $key = "$($uri.AbsolutePath.Substring(1))/bin/run-installers.ps1"
           Read-S3Object -BucketName $uri.Host -Key $key -File run-installers.ps1
           '@
