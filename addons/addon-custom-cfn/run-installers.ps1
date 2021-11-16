@@ -23,4 +23,4 @@ rm 'C:\Users\Administrator\Desktop\EC2 Feedback.website'
 rm 'C:\Users\Administrator\Desktop\EC2 Microsoft Windows Guide.website'
 
 #add git to path
-setx path "%path%;C:\git\bin"
+setx path "%path%;C:\git\bin;c:\Program Files\Amazon\AWSCLIV2"
