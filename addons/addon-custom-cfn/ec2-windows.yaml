@@ -307,6 +307,9 @@ Resources:
           reg add “HKLM\Software\policies\Microsoft\Windows NT\DNSClient”
           reg add “HKLM\Software\policies\Microsoft\Windows NT\DNSClient” /v ” EnableMulticast” /t REG_DWORD /d “0” /f
 
+          #enabling long PATH
+          reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f
+
           # ***END CUSTOMIZATIONS***
 
           # Install Windows Updates - require rebooting
@@ -419,6 +422,10 @@ Resources:
           Read-S3Object -BucketName $uri.Host -Key $key -File FirefoxSetup.exe
           $key = "$($uri.AbsolutePath.Substring(1))/bin/PortableGit.7z.exe"
           Read-S3Object -BucketName $uri.Host -Key $key -File PortableGit.7z.exe
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/AWSCLIV2.msi"
+          Read-S3Object -BucketName $uri.Host -Key $key -File AWSCLIV2.msi
+          $key = "$($uri.AbsolutePath.Substring(1))/bin/python-3.10.exe"
+          Read-S3Object -BucketName $uri.Host -Key $key -File python-3.10.exe
           $key = "$($uri.AbsolutePath.Substring(1))/bin/run-installers.ps1"
           Read-S3Object -BucketName $uri.Host -Key $key -File run-installers.ps1
           '@

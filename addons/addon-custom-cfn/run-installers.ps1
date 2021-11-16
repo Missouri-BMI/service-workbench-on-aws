@@ -4,6 +4,8 @@ c:\workdir\R.exe /verysilent
 c:\workdir\RStudio.exe /S
 c:\workdir\rtools.exe /verysilent
 c:\workdir\snowflake64_odbc.msi /quiet
+c:\workdir\AWSCLIV2.msi /quiet
+c:\workdir\python-3.10.exe /quiet PrependPath=1
 cmd /c "c:\workdir\QualysCloudAgent.exe CustomerId={b288187c-6e29-d330-8389-5b291af9e73f} ActivationId={75beca74-1e31-49b0-a353-cb176a99d0ef} WebServiceUri=https://qagpublic.qg1.apps.qualys.com/CloudAgent/"
 c:\workdir\jre.exe /s
 c:\workdir\FirefoxSetup.exe /S
