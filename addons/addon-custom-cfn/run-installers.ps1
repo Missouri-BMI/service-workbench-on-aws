@@ -1,16 +1,16 @@
 #run all installers
-c:\workdir\snowflake64_odbc.msi /quiet
-cmd /c  "c:\workdir\GitHubDesktopSetup-x64.exe /s"
-c:\workdir\R.exe /verysilent
-c:\workdir\RStudio.exe /S
-c:\workdir\rtools.exe /verysilent
-cmd /c "c:\workdir\python-3.10.exe /quiet PrependPath=1"
-cmd /c "c:\workdir\QualysCloudAgent.exe CustomerId={b288187c-6e29-d330-8389-5b291af9e73f} ActivationId={75beca74-1e31-49b0-a353-cb176a99d0ef} WebServiceUri=https://qagpublic.qg1.apps.qualys.com/CloudAgent/"
-c:\workdir\jre.exe /s
-c:\workdir\FirefoxSetup.exe /S
-cmd /c "c:\workdir\ChromeSetup.exe /silent /install"
-c:\workdir\PortableGit.7z.exe -o c:\git -y
-cmd /c "c:\workdir\AWSCLIV2.msi /quiet"
+Start-Process "c:\workdir\snowflake64_odbc.msi" -argumentlist  "/quiet" -wait
+Start-Process "c:\workdir\GitHubDesktopSetup-x64.exe" -argumentlist  "/s" -wait
+Start-Process "c:\workdir\R.exe" -argumentlist  "/verysilent" -wait
+Start-Process "c:\workdir\RStudio.exe" -argumentlist  "/S" -wait
+Start-Process "c:\workdir\rtools.exe" -argumentlist  "/verysilent" -wait
+Start-Process "c:\workdir\python-3.10.exe" -argumentlist  "/quiet PrependPath=1" -wait
+Start-Process "c:\workdir\QualysCloudAgent.exe" -argumentlist  "CustomerId={b288187c-6e29-d330-8389-5b291af9e73f} ActivationId={75beca74-1e31-49b0-a353-cb176a99d0ef} WebServiceUri=https://qagpublic.qg1.apps.qualys.com/CloudAgent/" -wait
+Start-Process "c:\workdir\jre.exe" -argumentlist  "/s" -wait
+Start-Process "c:\workdir\FirefoxSetup.exe" -argumentlist  "/S" -wait
+Start-Process "c:\workdir\ChromeSetup.exe" -argumentlist  "/silent /install" -wait
+Start-Process "c:\workdir\PortableGit.7z.exe" -argumentlist  "-o c:\git -y" -wait
+Start-Process "c:\workdir\AWSCLIV2.msi" -argumentlist  "/quiet" -wait
 
 #create shortcut to rstudio on desktop
 New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
