@@ -10,7 +10,7 @@ c:\workdir\jre.exe /s
 c:\workdir\FirefoxSetup.exe /S
 cmd /c "c:\workdir\ChromeSetup.exe /silent /install"
 c:\workdir\PortableGit.7z.exe -o c:\git -y
-c:\workdir\AWSCLIV2.msi /quiet
+cmd /c "c:\workdir\AWSCLIV2.msi /quiet"
 
 #create shortcut to rstudio on desktop
 New-Item -ItemType SymbolicLink -Path C:\Users\Administrator\Desktop\ -Name "RStudio.lnk" -Value "C:\Program Files\RStudio\bin\rstudio.exe"
