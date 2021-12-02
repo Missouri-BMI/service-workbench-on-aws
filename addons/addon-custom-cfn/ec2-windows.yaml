@@ -442,6 +442,7 @@ Resources:
 
           cfn-signal.exe -e $lastexitcode --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
           </powershell>
+          
         IdleCPUAlarm:
           Type: 'AWS::CloudWatch::Alarm'
           Properties:
