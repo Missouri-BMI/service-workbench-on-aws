@@ -442,24 +442,24 @@ Resources:
 
           cfn-signal.exe -e $lastexitcode --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
           </powershell>
-          
-        IdleCPUAlarm:
-          Type: 'AWS::CloudWatch::Alarm'
-          Properties:
-              AlarmActions: 
-              - !Join ['', ['arn:aws:swf:', !Ref AWS::Region, '::action/actions/AWS_EC2.InstanceId.Stop/1.0']]
-              MetricName: CPUUtilization
-              Namespace: AWS/EC2
-              Statistic: Average
-              Period: '900' # 900 seconds is 15 minutes
-              EvaluationPeriods: '4' # 4 periods, or 1 hour total
-              DatapointsToAlarm: '4' # Need all 4 consecutively
-              Threshold: '10' # 10% is the CPU threshold
-              ComparisonOperator: LessThanThreshold
-              Dimensions:
-              - Name: InstanceId
-                Value: !Ref EC2Instance
-              TreatMissingData:  'missing'
+
+  IdleCPUAlarm:
+    Type: 'AWS::CloudWatch::Alarm'
+    Properties:
+        AlarmActions: 
+        - !Join ['', ['arn:aws:swf:', !Ref AWS::Region, '::action/actions/AWS_EC2.InstanceId.Stop/1.0']]
+        MetricName: CPUUtilization
+        Namespace: AWS/EC2
+        Statistic: Average
+        Period: '900' # 900 seconds is 15 minutes
+        EvaluationPeriods: '4' # 4 periods, or 1 hour total
+        DatapointsToAlarm: '4' # Need all 4 consecutively
+        Threshold: '10' # 10% is the CPU threshold
+        ComparisonOperator: LessThanThreshold
+        Dimensions:
+        - Name: InstanceId
+          Value: !Ref EC2Instance
+        TreatMissingData:  'missing'
 
 Outputs:
   Ec2WorkspaceDnsName:
