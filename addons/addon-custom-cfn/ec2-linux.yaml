@@ -211,7 +211,7 @@ Resources:
         Period: '900' # 900 seconds is 15 minutes
         EvaluationPeriods: '4' # 4 periods, or 1 hour total
         DatapointsToAlarm: '4' # Need all 4 consecutively
-        Threshold: '10' # 10% is the CPU threshold
+        Threshold: '8' # 10% is the CPU threshold
         ComparisonOperator: LessThanThreshold
         Dimensions:
         - Name: InstanceId
