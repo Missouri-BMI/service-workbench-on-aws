@@ -438,9 +438,6 @@ Resources:
           
           ."C:\workdir\run-installers.ps1"
 
-          #enable qualys scan on startup
-          reg add "HKLM\SOFTWARE\Qualys\QualysAgent\ScanOnDemand\Vulnerability" /v ScanOnStartup /t REG_DWORD /d 1
-
           # ***END CUSTOMIZATIONS***
 
           cfn-signal.exe -e $lastexitcode --stack ${AWS::StackId} --resource EC2Instance --region ${AWS::Region}
